@@ -16,7 +16,14 @@ class ProcessBuilderDemo {
 	private static void pythonScript(List<String> command) throws IOException {
 		ProcessBuilder pb;
 		Process process;
+		Properties p;
+	    FileReader read;
+		 read=new FileReader("path.properties");  
+         p=new Properties();  
+         p.load(read);
 		
+         
+         
 		//Command for install python packages from requirements file
 		
 		command = new ArrayList<String>();
@@ -37,7 +44,7 @@ class ProcessBuilderDemo {
 		command.add("-n");
 		command.add("100");
 		command.add("-o");
-		command.add("LOG");
+		command.add(p.getProperty("type"));
 		pb = new ProcessBuilder(command); 
 		process = pb.start();   // starting the process
 	}

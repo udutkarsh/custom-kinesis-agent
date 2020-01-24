@@ -28,7 +28,21 @@ public class LogConverter {
 	        
 	        try {
 	        	
+	        	//setting parameters from log_file
+	    		file_parameter = new ArrayList<String>();  
+	            file_parameter.add("remoteIP");
+	            file_parameter.add("time");
+	            file_parameter.add("method");
+	            file_parameter.add("request");
+	            file_parameter.add("status");
+	            file_parameter.add("port");
+	            file_parameter.add("host");
+	            file_parameter.add("userAgent"); 
 	        	
+
+	    		//adding common parameters
+	        	 file_parameter.add("id");
+	             file_parameter.add("ip");
 	        	
 	        	// 
 	             read=new FileReader("path.properties");  
@@ -59,20 +73,10 @@ public class LogConverter {
 	 
 	 
 	 private static void logToCSV() throws IOException {	 
-		//setting parameters from csv_file
-		 file_parameter = new ArrayList<String>(); 
-		 System.out.println(line);
-		 String[] words1 = line.split(",");
-		 
-		 
-		 for (int i = 0; i <= words1.length - 1; i++) {
-			 file_parameter.add(words1[i]);
-	        }
-		//adding common parameters
-    	 file_parameter.add("id");
-         file_parameter.add("ip");
+		
+	
         
-			line = reader.readLine();
+			
 			 while (line != null) {
 			       array = new ArrayList<String>();
 			        String[] words = line.split(",");
@@ -87,20 +91,8 @@ public class LogConverter {
 	 
 	 
 	private static void logToJson() throws IOException {
-		//setting parameters from log_file
-		file_parameter = new ArrayList<String>();  
-        file_parameter.add("remoteIP");
-        file_parameter.add("time");
-        file_parameter.add("method");
-        file_parameter.add("request");
-        file_parameter.add("status");
-        file_parameter.add("port");
-        file_parameter.add("host");
-        file_parameter.add("userAgent");   
-      //adding common parameters
-   	 file_parameter.add("id");
-        file_parameter.add("ip");
-       
+		  
+    
 		
 				 while (line != null) {
 		       array = new ArrayList<String>();
@@ -140,7 +132,7 @@ public class LogConverter {
 	        
 	        
 	        try {
-	            KinesisFirehose.jsonSender(json);
+	//            KinesisFirehose.jsonSender(json);
 	        } catch (Exception e) {
 	          
 	            e.printStackTrace();

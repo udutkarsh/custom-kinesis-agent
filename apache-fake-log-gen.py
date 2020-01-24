@@ -39,7 +39,7 @@ class switch(object):
             return False
 
 parser = argparse.ArgumentParser(__file__, description="Fake Apache Log Generator")
-parser.add_argument("--output", "-o", dest='output_type', help="Write to a Log file, a gzip file or to STDOUT", choices=['LOG','GZ','CONSOLE'] )
+parser.add_argument("--output", "-o", dest='output_type', help="Write to a Log file, a gzip file or to STDOUT", choices=['LOG','CSV'] )
 parser.add_argument("--log-format", "-l", dest='log_format', help="Log format, Common or Extended Log Format ", choices=['CLF','ELF'], default="ELF" )
 parser.add_argument("--num", "-n", dest='num_lines', help="Number of lines to generate (0 for infinite)", type=int, default=1)
 parser.add_argument("--prefix", "-p", dest='file_prefix', help="Prefix the output file name", type=str)
@@ -58,15 +58,16 @@ timestr = time.strftime("%Y%m%d-%H%M%S")
 otime = datetime.datetime.now()
 
 outFileName = 'access_log.log' 
+outFileName1 = 'access_log.csv'
 
 for case in switch(output_type):
     if case('LOG'):
         f = open(outFileName,'w')
         break
-    if case('GZ'):
-        f = gzip.open(outFileName+'.gz','w')
+    if case('CSV'):
+        f = open(outFileName1,'w')
         break
-    if case('CONSOLE'): pass
+   
     if case():
         f = sys.stdout
 
@@ -76,7 +77,9 @@ verb=["GET","POST","DELETE","PUT"]
 
 resources=["/list","/wp-content","/wp-admin","/explore","/search/tag/list","/app/main/posts","/posts/posts/explore","/apps/cart.jsp?appID="]
 
-ualist = [faker.firefox, faker.chrome, faker.safari, faker.internet_explorer, faker.opera]
+version =['/1.5','/1.3','/1.1','/1.05','/2.05']
+
+ualist = ['firefox','chrome','safari','internet_explorer','opera']
 
 flag = True
 while (flag):
@@ -98,11 +101,16 @@ while (flag):
     resp = numpy.random.choice(response,p=[0.9,0.04,0.02,0.04])
     byt = int(random.gauss(5000,50))
     referer = faker.uri()
-    useragent = numpy.random.choice(ualist,p=[0.5,0.3,0.1,0.05,0.05] )()
-    if log_format == "CLF":
-        f.write('%s - - [%s %s] "%s %s HTTP/1.0" %s %s\n' % (ip,dt,tz,vrb,uri,resp,byt))
-    elif log_format == "ELF": 
-        f.write('%s - - [%s %s] "%s %s HTTP/1.0" %s %s "%s" "%s"\n' % (ip,dt,tz,vrb,uri,resp,byt,referer,useragent))
+    useragent = random.choice(ualist) + random.choice(version)
+    
+    if args.output_type == "LOG":
+    
+        if log_format == "CLF":
+            f.write('%s - - [%s %s] "%s %s HTTP/1.0" %s %s\n' % (ip,dt,tz,vrb,uri,resp,byt))
+        elif log_format == "ELF": 
+            f.write('%s - - [%s %s] "%s %s HTTP/1.0" %s %s "%s" "%s"\n' % (ip,dt,tz,vrb,uri,resp,byt,referer,useragent))
+    else:
+            f.write('%s,[%s %s],%s,%s,%s,%s,%s,%s\n' % (ip,dt,tz,vrb,uri,resp,byt,referer,useragent))     
     f.flush()
 
     log_lines = log_lines - 1
