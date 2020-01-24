@@ -132,7 +132,7 @@ public class LogConverter {
 	        
 	        
 	        try {
-	//            KinesisFirehose.jsonSender(json);
+           KinesisFirehose.jsonSender(json);
 	        } catch (Exception e) {
 	          
 	            e.printStackTrace();
