@@ -28,6 +28,7 @@ public class LogConverter {
     static InetAddress ip;
     static ArrayList<String> array;
     static ArrayList<String> file_parameter; 
+    static String app_name;
 	
 	 public static void logReader() {
 	        
@@ -43,19 +44,20 @@ public class LogConverter {
 	            file_parameter.add("port");
 	            file_parameter.add("host");
 	            file_parameter.add("userAgent"); 
+	            
 	        	
 
 	    		//adding common parameters
 	        	 file_parameter.add("id");
 	             file_parameter.add("ip");
+	             file_parameter.add("application_name");
 	        	
-	        	// 
 	             read=new FileReader("path.properties");  
 	             
 	             p=new Properties();  
 	             p.load(read);  
-	             Files.list(Paths.get("."))
-	             .forEach(System.out::println);
+	             app_name= p.getProperty("app_name");
+
 	             
 	            reader = new BufferedReader(
 	                    new FileReader(p.getProperty("access_file")));
@@ -127,6 +129,7 @@ public class LogConverter {
 	         ip=InetAddress.getLocalHost();
 	         array.add(Integer.toString(id++));
 	         array.add(ip.toString());
+	         array.add(app_name);
 	               
 	        String json = " { ";
 	        int i;
