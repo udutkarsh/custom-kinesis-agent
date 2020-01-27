@@ -3,13 +3,14 @@ import java.io.*;
 import java.util.*;
 
 class ProcessBuilderDemo {
+
 	
 	public static void main(String[] arg) throws Exception {
 		
 		List<String> command=null;
 		
 		pythonScript(command);      //Installing python packages and running python script
-	
+		Thread.sleep(1500);
 		LogConverter.logReader();  	//Calling LogConverter class for conversion
 	}
 
@@ -42,11 +43,16 @@ class ProcessBuilderDemo {
 		command.add("python");
 		command.add("apache-fake-log-gen.py");
 		command.add("-n");
-		command.add("100");
+		command.add(p.getProperty("n"));
 		command.add("-o");
 		command.add(p.getProperty("type"));
 		pb = new ProcessBuilder(command); 
 		process = pb.start();   // starting the process
+
+		
+		
+		
+		
 	}
 
 }

@@ -3,6 +3,9 @@
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+
+
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -10,6 +13,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class LogConverter {
@@ -46,9 +51,12 @@ public class LogConverter {
 	        	
 	        	// 
 	             read=new FileReader("path.properties");  
-	              
+	             
 	             p=new Properties();  
 	             p.load(read);  
+	             Files.list(Paths.get("."))
+	             .forEach(System.out::println);
+	             
 	            reader = new BufferedReader(
 	                    new FileReader(p.getProperty("access_file")));
 	            line = reader.readLine();
