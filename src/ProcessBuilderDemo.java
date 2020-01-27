@@ -10,7 +10,7 @@ class ProcessBuilderDemo {
 		List<String> command=null;
 		
 		pythonScript(command);      //Installing python packages and running python script
-		Thread.sleep(1500);
+		Thread.sleep(2000);
 		LogConverter.logReader();  	//Calling LogConverter class for conversion
 	}
 
