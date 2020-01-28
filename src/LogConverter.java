@@ -30,6 +30,13 @@ public class LogConverter {
     static ArrayList<String> file_parameter; 
     static String app_name;
 	
+    
+
+	public static void main(String[] arg) throws Exception {	
+		logReader();  	//Calling Logreader method for conversion
+	}
+    
+    
 	 public static void logReader() {
 	        
 	        try {
