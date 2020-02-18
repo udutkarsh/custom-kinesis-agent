@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-
+import org.json.simple.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -20,24 +20,26 @@ import java.util.ArrayList;
 public class LogConverter {
 
 	
-	static BufferedReader reader;
-    static FileReader read;
-    static String line;
-    static Properties p;
-    static int id=0;
-    static InetAddress ip;
-    static ArrayList<String> array;
-    static ArrayList<String> file_parameter; 
-    static String app_name;
+	 BufferedReader reader;
+     FileReader read;
+     String line;
+     Properties p;
+     int id=0;
+     InetAddress ip;
+     ArrayList<String> array;
+     ArrayList<String> file_parameter; 
+     String app_name;
 	
     
 
 	public static void main(String[] arg) throws Exception {	
-		logReader();  	//Calling Logreader method for conversion
+		 LogConverter logConverter =  new  LogConverter();
+		 logConverter.logReader();
+ 	//Calling Logreader method for conversion
 	}
     
     
-	 public static void logReader() {
+	 public  void logReader() {
 	        
 	        try {
 	        	
@@ -69,18 +71,9 @@ public class LogConverter {
 	            reader = new BufferedReader(
 	                    new FileReader(p.getProperty("access_file")));
 	            line = reader.readLine();
-				if(p.getProperty("conversion_type").equals("LogToJson"))
-				{
-					logToJson();
-				}
-				else if(p.getProperty("conversion_type").equals("CSVToJson"))
-				{
-					logToCSV();
-				}
+	            logToJson();
 	            
 	            
-	           
-	          //  
 	          
 	            
 	        } catch (IOException e) { 
@@ -89,7 +82,7 @@ public class LogConverter {
 	    }
 	 
 	 
-	 private static void logToCSV() throws IOException {	 
+	 private void logToCSV() throws IOException {	 
 		
 	
         
@@ -107,11 +100,11 @@ public class LogConverter {
 	 }
 	 
 	 
-	private static void logToJson() throws IOException {
+	private  void logToJson() throws IOException {
 		  
     
 		
-				 while (line != null) {
+				while (line != null) {
 		       array = new ArrayList<String>();
 		        String[] words = line.split("\\s");
 		        for (int i = 0; i <= words.length - 1; i++) {
@@ -126,10 +119,10 @@ public class LogConverter {
 		            }
 		        }
 		        logToJsonGenerator(array,file_parameter);
-		           line = reader.readLine();
+		          line = reader.readLine();
 				 }
 		}
-	    public static void logToJsonGenerator(ArrayList<String> array,ArrayList<String> file_parameter) throws UnknownHostException {
+	    public void logToJsonGenerator(ArrayList<String> array,ArrayList<String> file_parameter) throws UnknownHostException {
 	       
 	    	
 	         //adding common values ip and count_id
@@ -138,19 +131,17 @@ public class LogConverter {
 	         array.add(ip.toString());
 	         array.add(app_name);
 	               
-	        String json = " { ";
+	        StringBuilder json = new StringBuilder("{ ");
+	        JSONObject messageJson = new JSONObject();
 	        int i;
-	        for (i = 0; i < array.size() - 1; i++) {
-	            json = json + "\"" + file_parameter.get(i) + "\" : \"" + array.get(i) + "\", ";
-	        }
-	        json = json + "\"" + file_parameter.get(i) + "\" : \"" + array.get(i) + "\" }";
-	        
-	        
-	        System.out.println(json+" ");
-	        
-	        
+	        for (i = 0; i < array.size() ; i++) {
+	        	
+	        	 messageJson.put(file_parameter.get(i), array.get(i));
+	          
+	        } 
 	        try {
-           KinesisFirehose.jsonSender(json);
+	        	KinesisFirehose firehose= new KinesisFirehose();
+	        	firehose.jsonSender(messageJson);
 	        } catch (Exception e) {
 	          
 	            e.printStackTrace();

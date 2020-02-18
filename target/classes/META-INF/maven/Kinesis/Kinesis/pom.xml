@@ -26,7 +26,7 @@
 		<dependency>
 			<groupId>com.amazonaws</groupId>
 			<artifactId>amazon-kinesis-client</artifactId>
-			<version>1.2.1</version>
+			<version>1.13.2</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
@@ -37,13 +37,13 @@
 		<dependency>
 			<groupId>com.amazonaws</groupId>
 			<artifactId>aws-java-sdk-ec2</artifactId>
-			<version>1.11.687</version>
+			<version>1.11.723</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.amazonaws</groupId>
 			<artifactId>aws-java-sdk-kinesis</artifactId>
-			<version>1.11.687</version>
+			<version>1.11.723</version>
 		</dependency>
 
 	</dependencies>

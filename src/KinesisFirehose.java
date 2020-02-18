@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -15,7 +16,6 @@ import org.json.simple.parser.ParseException;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.auth.InstanceProfileCredentialsProvider;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.kinesisfirehose.AmazonKinesisFirehose;
@@ -26,36 +26,48 @@ import com.amazonaws.services.kinesisfirehose.model.PutRecordResult;
 import com.amazonaws.services.kinesisfirehose.model.Record;
 
 public class KinesisFirehose {
-	private static AmazonKinesisFirehose firehoseClient;
-
+	private AmazonKinesisFirehose firehoseClient;
+	
+	private final static Logger LOGGER =  
+            Logger.getLogger(Logger.GLOBAL_LOGGER_NAME); 
 	@SuppressWarnings("deprecation")
-	private static void init() throws Exception {
+	private  void init() throws Exception {
 		
-		//AWSCredentials credentials = new ProfileCredentialsProvider("default").getCredentials();
-		
+		AWSCredentials credentials = new ProfileCredentialsProvider("default").getCredentials();
+   
+
 		firehoseClient = AmazonKinesisFirehoseClientBuilder
 				.standard()
-				.withCredentials(new InstanceProfileCredentialsProvider(false))
+				.withCredentials(new AWSStaticCredentialsProvider(credentials))
 				.withRegion(Regions.US_EAST_1)
 				.build();
 	}
 
-	public static void jsonSender(String json) throws Exception {
+	public  void jsonSender(JSONObject messageJson) throws Exception {
 
 		try {
+			
 			init();
 			FileReader read=new FileReader("path.properties");  
 		    Properties p=new Properties();  
 		    p.load(read);  
 	
+		 
+		    
 				Record record = new Record();
-				record.setData(ByteBuffer.wrap(json.getBytes(StandardCharsets.UTF_8)));
+				
+				record.withData(ByteBuffer.wrap(messageJson.toString().getBytes()));
+				
+				
 				PutRecordRequest putRecordRequest = new PutRecordRequest()
-						.withDeliveryStreamName(p.getProperty("stream_name")).withRecord(record);
+						.withDeliveryStreamName(p.getProperty("stream_name"));
+				
 				putRecordRequest.setRecord(record);
+				
 				PutRecordResult result = firehoseClient.putRecord(putRecordRequest);
 				
-				System.out.println("Result Inserted with ID: " + result.getRecordId());
+				LOGGER.info("Message to Firehose: " + messageJson.toString());
+				LOGGER.info("Result Inserted with ID: " + result.getRecordId());
 				
 		
 		} catch (FileNotFoundException e) {
