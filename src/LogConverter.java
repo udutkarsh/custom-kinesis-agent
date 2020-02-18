@@ -81,25 +81,6 @@ public class LogConverter {
 	        }
 	    }
 	 
-	 
-	 private void logToCSV() throws IOException {	 
-		
-	
-        
-			
-			 while (line != null) {
-			       array = new ArrayList<String>();
-			        String[] words = line.split(",");
-			        for (int i = 0; i <= words.length - 1; i++) {
-			        	array.add(words[i]);
-			        }
-			        logToJsonGenerator(array,file_parameter);
-			        line = reader.readLine();
-			 }
-			
-	 }
-	 
-	 
 	private  void logToJson() throws IOException {
 		  
     
